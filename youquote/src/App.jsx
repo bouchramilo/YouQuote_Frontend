@@ -1,7 +1,7 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LayoutMain from "./components/LayoutMain";
-import LayoutDashboard from "./components/LayoutDashboard";
+import LayoutMain from "./components/partials/LayoutMain";
+import LayoutDashboard from "./components/partials/LayoutDashboard";
 
 import Home from "./pages/Home";
 import Login from "./pages/Auth/Login";
