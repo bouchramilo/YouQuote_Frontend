@@ -1,6 +1,19 @@
+import Hero from './../components/home/Hero';
+import SearchSection from './../components/home/SearchSection';
+import ListPopulaire from './../components/home/ListPopulaire';
+
 const Home = () => {
     return ( 
-        <div>Home page</div>
+        <main>
+        {/* <!-- Hero Section - Citation du Jour --> */}
+        <Hero />
+        
+        {/* <!-- Search Section --> */}
+        <SearchSection />
+        
+        {/* <!-- Citations Populaires --> */}
+        <ListPopulaire />
+    </main>
      );
 }
  

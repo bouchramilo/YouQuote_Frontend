@@ -1,10 +1,23 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Context } from "./../../context/UserContext";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useContext(Context);
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      await logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <header className="sticky top-0 bg-white shadow-sm z-50">
@@ -15,33 +28,35 @@ const Header = () => {
 
         {/* Nav Desktop */}
         <nav className="hidden md:flex items-center space-x-8">
-          <Link
-            to="/"
-            className="font-medium text-gray-900 hover:text-primary transition-colors"
-          >
+          <Link to="/" className="font-medium text-gray-900 hover:text-primary transition-colors">
             Accueil
           </Link>
-          <Link
-            to="/register"
-            className="font-medium text-gray-600 hover:text-primary transition-colors"
-          >
-            Inscription
-          </Link>
-          <Link
-            to="/login"
-            className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors"
-          >
-            <span className="w-5 h-5 flex items-center justify-center">
-              <i className="ri-user-line"></i>
-            </span>
-            <span>Connexion</span>
-          </Link>
-          <Link
-            to="/dashboard"
-            className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors"
-          >
-            Dashboard
-          </Link>
+
+          {!isAuthenticated ? (
+            <>
+              <Link to="/register" className="font-medium text-gray-600 hover:text-primary transition-colors">
+                Inscription
+              </Link>
+              <Link to="/login" className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors">
+                <span className="w-5 h-5 flex items-center justify-center">
+                  <i className="ri-user-line"></i>
+                </span>
+                <span>Connexion</span>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/dashboard" className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors">
+                Dashboard
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="py-2 font-medium text-gray-600 hover:text-primary transition-colors"
+              >
+                Déconnexion
+              </button>
+            </>
+          )}
         </nav>
 
         {/* Menu Burger Button */}
@@ -57,37 +72,35 @@ const Header = () => {
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 py-3">
           <div className="container mx-auto px-4 flex flex-col space-y-3">
-            <Link
-              to="/"
-              className="py-2 font-medium text-gray-900 hover:text-primary transition-colors"
-              onClick={toggleMenu}
-            >
+            <Link to="/" className="py-2 font-medium text-gray-900 hover:text-primary transition-colors" onClick={toggleMenu}>
               Accueil
             </Link>
-            <Link
-              to="/register"
-              className="py-2 font-medium text-gray-600 hover:text-primary transition-colors"
-              onClick={toggleMenu}
-            >
-              Inscription
-            </Link>
-            <Link
-              to="/login"
-              className="py-2 flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors"
-              onClick={toggleMenu}
-            >
-              <span className="w-5 h-5 flex items-center justify-center">
-                <i className="ri-user-line"></i>
-              </span>
-              <span>Connexion</span>
-            </Link>
-            <Link
-              to="/dashboard"
-              className="py-2 font-medium text-gray-600 hover:text-primary transition-colors"
-              onClick={toggleMenu}
-            >
-              Dashboard
-            </Link>
+            
+            {!isAuthenticated ? (
+              <>
+                <Link to="/register" className="py-2 font-medium text-gray-600 hover:text-primary transition-colors" onClick={toggleMenu}>
+                  Inscription
+                </Link>
+                <Link to="/login" className="py-2 flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors" onClick={toggleMenu}>
+                  <span className="w-5 h-5 flex items-center justify-center">
+                    <i className="ri-user-line"></i>
+                  </span>
+                  <span>Connexion</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/dashboard" className="py-2 font-medium text-gray-600 hover:text-primary transition-colors" onClick={toggleMenu}>
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="py-2 font-medium text-gray-600 hover:text-primary transition-colors text-left"
+                >
+                  Déconnexion
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

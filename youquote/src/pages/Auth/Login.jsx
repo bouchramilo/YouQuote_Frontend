@@ -4,80 +4,81 @@ import Input from "./../../components/Input";
 import Button from "./../../components/Button";
 import Label from "./../../components/Label";
 
+// ************************************************************************************************************************
 const Login = () => {
-
+  // ************************************************************************************************************************
   const navigate = useNavigate();
-
+  // ************************************************************************************************************************
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  const [fieldErrors, setFieldErrors] = useState({
-    email: { show: false, message: "Veuillez entrer une adresse email valide" },
-    password: {
-      show: false,
-      message: "Le mot de passe doit contenir au moins 8 caractères",
-    },
-  });
-
+  // ************************************************************************************************************************
+  const [errors, setErrors] = useState({});
+  // ************************************************************************************************************************
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  // ************************************************************************************************************************
   async function handleLogin(e) {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrors({});
 
-    setFieldErrors({
-      email: { ...fieldErrors.email, show: false },
-      password: { ...fieldErrors.password, show: false },
-    });
-
-    let isValid = true;
-    const newErrors = { ...fieldErrors };
-
-    if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email.show = true;
-      isValid = false;
-    }
-
-    if (!formData.password || formData.password.length < 8) {
-      newErrors.password.show = true;
-      isValid = false;
-    }
-
-    if (!isValid) {
-      setFieldErrors(newErrors);
-      setIsSubmitting(false);
-      return;
-    }
-
+    // +++++++++++++ FETCH API REGISTER ++++++++++++++++
     try {
-      // const response = await fetch("/api/login", {
-      //   method: "POST",
-      //   body: JSON.stringify(formData),
-      // });
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+        credentials: "include",
+      });
 
-      // const data = await response.json();
+      // Vérification du content-type
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        throw new Error(`Le serveur a répondu avec: ${text.substring(0, 100)}`);
+      }
 
-      // if (!response.ok) {
-      //   throw new Error(data.message || "Erreur lors de la connexion");
-      // }
+      const data = await response.json();
 
-      // console.log("Connexion réussie:", data);
+      if (!response.ok) {
+        if (response.status === 422) {
+          const formattedErrors = {};
+          Object.entries(data.errors || {}).forEach(([key, messages]) => {
+            formattedErrors[key] = Array.isArray(messages)
+              ? messages[0]
+              : messages;
+          });
+          setErrors(formattedErrors);
+        } else {
+          throw new Error(
+            data.message || `Erreur serveur (${response.status})`
+          );
+        }
+        return;
+      }
 
-      // setTimeout(() => {
-      //   navigate("/dashboard");
-      // }, 1000);
+      // localStorage.setItem("auth_token", data.token);
+      navigate("/dashboard");
     } catch (error) {
-      console.error("Erreur:", error);
+      setErrors({
+        general: error.message.includes("Le serveur a répondu avec")
+          ? "Erreur de configuration serveur"
+          : error.message,
+      });
     } finally {
       setIsSubmitting(false);
     }
   }
 
-
-
-
+  // ************************************************************************************************************************
   return (
     <div className="bg-white p-8 rounded-lg shadow-lg w-11/12 max-w-md">
       <h1 className="text-3xl text-text text-center mb-8">Connexion</h1>
@@ -86,16 +87,18 @@ const Login = () => {
           <Label for="email" labelname="Adresse Email" />
           <div className="relative">
             <i className="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-accent"></i>
-            <Input type="email" id="email" placeholder="Email" required
-             value={formData.email}
-             onChange={(e) =>
-               setFormData({ ...formData, email: e.target.value })
-             } />
+            <Input
+              type="email"
+              id="email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              name="email"
+              hasError={!!errors.email}
+            />
           </div>
-          <Error
-            errorMessage={fieldErrors.email.message}
-            showError={fieldErrors.email.show}
-          />
+          {errors.email && <Error errorMessage={errors.email[0]} />}
         </div>
 
         <div>
@@ -105,18 +108,15 @@ const Login = () => {
             <Input
               type="password"
               id="password"
-              placeholder="Mot de passe"
-              required
               value={formData.password}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
+              name="password"
+              hasError={!!errors.password}
             />
           </div>
-          <Error
-            errorMessage={fieldErrors.password.message}
-            showError={fieldErrors.password.show}
-          />
+          {errors.password && <Error errorMessage={errors.password[0]} />}
         </div>
         <div id="errorMessage" className="text-red-500 text-sm hidden">
           Identifiants incorrects

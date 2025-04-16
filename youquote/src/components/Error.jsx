@@ -1,11 +1,6 @@
-const Error = ({ showError, errorMessage }) => {
-  return (
-    <>
-     {showError && (
-        <div className="text-red-600 text-xs">{errorMessage}</div>
-      )}
-    </>
-  );
-};
+// Fichier ../../components/Error.js
+const ErrorMessage = ({ message }) => (
+  <p className="mt-1 text-sm text-red-600">{message}</p>
+);
 
-export default Error;
+export default ErrorMessage;

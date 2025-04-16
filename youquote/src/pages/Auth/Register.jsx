@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import Error from "../../components/Error";
 import Label from "../../components/Label";
 
-// ************************************************************************************************************************
 const Register = () => {
-  // ************************************************************************************************************************
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,89 +14,79 @@ const Register = () => {
     password_confirmation: "",
   });
 
-  // ************************************************************************************************************************
-  const [fieldErrors, setFieldErrors] = useState({
-    name: { show: false, message: "Le nom est requis" },
-    email: { show: false, message: "Veuillez entrer une adresse email valide" },
-    password: {
-      show: false,
-      message: "Le mot de passe doit contenir au moins 8 caractères",
-    },
-    password_confirmation: {
-      show: false,
-      message: "Les mots de passe ne correspondent pas",
-    },
-  });
-
-  // ************************************************************************************************************************
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // ************************************************************************************************************************
 
-  async function handleRegister(e) {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    console.log("submited form");
-
-    setFieldErrors({
-      name: { ...fieldErrors.name, show: false },
-      email: { ...fieldErrors.email, show: false },
-      password: { ...fieldErrors.password, show: false },
-      password_confirmation: {
-        ...fieldErrors.password_confirmation,
-        show: false,
-      },
-    });
-
-    let isValid = true;
-    const newErrors = { ...fieldErrors };
-
-    if (!formData.name.trim()) {
-      newErrors.name.show = true;
-      isValid = false;
-    }
-
-    if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email.show = true;
-      isValid = false;
-    }
-
-    if (!formData.password || formData.password.length < 8) {
-      newErrors.password.show = true;
-      isValid = false;
-    }
-
-    if (formData.password !== formData.password_confirmation) {
-      newErrors.password_confirmation.show = true;
-      isValid = false;
-    }
-
-    if (!isValid) {
-      setFieldErrors(newErrors);
-      setIsSubmitting(false);
-      return;
-    }
-
-    // +++++++++++++ FETCH API REGISTER ++++++++++++++++
+    setErrors({});
 
     try {
-      console.log(formData);
-      // -------------------------------- logique de register ----------
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          password_confirmation: formData.password_confirmation,
+        }),
+        credentials: "include",
+      });
 
-      // -------------------------------- ----------
+      // Vérification du content-type
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        throw new Error(`Le serveur a répondu avec: ${text.substring(0, 100)}`);
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 422) {
+          const formattedErrors = {};
+          Object.entries(data.errors || {}).forEach(([key, messages]) => {
+            formattedErrors[key] = Array.isArray(messages)
+              ? messages[0]
+              : messages;
+          });
+          setErrors(formattedErrors);
+        } else {
+          throw new Error(
+            data.message || `Erreur serveur (${response.status})`
+          );
+        }
+        return;
+      }
+
+      // localStorage.setItem("auth_token", data.token);
+      navigate("/dashboard");
     } catch (error) {
-      console.error("Erreur:", error);
+      setErrors({
+        general: error.message.includes("Le serveur a répondu avec")
+          ? "Erreur de configuration serveur"
+          : error.message,
+      });
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
-  // ************************************************************************************************************************
   return (
     <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
       <h1 className="text-3xl font-heading font-bold text-center text-text mb-8">
         Inscription
       </h1>
+
+      {errors.general && (
+        <div className="mb-4 text-red-500 text-center">{errors.general}</div>
+      )}
 
       <form className="space-y-6" onSubmit={handleRegister}>
         <div>
@@ -108,11 +97,9 @@ const Register = () => {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             name="name"
+            hasError={!!errors.name}
           />
-          <Error
-            errorMessage={fieldErrors.name.message}
-            showError={fieldErrors.name.show}
-          />
+          {errors.name && <Error errorMessage={errors.name[0]} />}
         </div>
 
         <div>
@@ -125,11 +112,9 @@ const Register = () => {
               setFormData({ ...formData, email: e.target.value })
             }
             name="email"
+            hasError={!!errors.email}
           />
-          <Error
-            errorMessage={fieldErrors.email.message}
-            showError={fieldErrors.email.show}
-          />
+          {errors.email && <Error errorMessage={errors.email[0]} />}
         </div>
 
         <div>
@@ -142,21 +127,19 @@ const Register = () => {
               setFormData({ ...formData, password: e.target.value })
             }
             name="password"
+            hasError={!!errors.password}
           />
-          <Error
-            errorMessage={fieldErrors.password.message}
-            showError={fieldErrors.password.show}
-          />
+          {errors.password && <Error errorMessage={errors.password[0]} />}
         </div>
 
         <div>
           <Label
-            for="confirmPassword"
+            for="password_confirmation"
             labelname="Confirmation du mot de passe"
           />
           <Input
             type="password"
-            id="confirmPassword"
+            id="password_confirmation"
             value={formData.password_confirmation}
             onChange={(e) =>
               setFormData({
@@ -164,15 +147,15 @@ const Register = () => {
                 password_confirmation: e.target.value,
               })
             }
-            name="confirmPassword"
+            name="password_confirmation"
+            hasError={!!errors.password_confirmation}
           />
-          <Error
-            errorMessage={fieldErrors.password_confirmation.message}
-            showError={fieldErrors.password_confirmation.show}
-          />
+          {errors.password_confirmation && (
+            <Error errorMessage={errors.password_confirmation[0]} />
+          )}
         </div>
 
-        <Button name="Créer un compte" />
+        <Button name="Créer un compte" disabled={isSubmitting} />
       </form>
 
       <p className="mt-6 text-center text-sm text-text">
