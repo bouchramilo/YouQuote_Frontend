@@ -1,12 +1,16 @@
-import { Link } from 'react-router-dom';
- 
-
+import { Link } from "react-router-dom";
 
 const CardQuote = ({ key, quote }) => {
   const categories = quote.categories || []; // Ajout d'une valeur par défaut
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 border border-secondary transition-shadow hover:shadow-md">
+    <div
+      className="bg-accent/10 rounded-lg shadow-lg shadow-gray-400 p-6 border-4 border-accent flex flex-col justify-between transition-shadow hover:shadow-lg hover:shadow-accent"
+      style={{
+        border: "2px solid",
+        borderRadius: "10% 90% 10% 90% / 90% 10% 90% 10% ",
+      }}
+    >
       <blockquote className="quote-text text-lg text-text mb-4 leading-relaxed">
         "{quote.content}"
       </blockquote>
@@ -16,7 +20,7 @@ const CardQuote = ({ key, quote }) => {
       <div className="flex flex-wrap gap-2 mb-4">
         {categories.map((cate, index) => (
           <span
-            key={index} // Ajout d'une clé unique
+            key={index}
             className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
           >
             {cate}
@@ -39,7 +43,7 @@ const CardQuote = ({ key, quote }) => {
             </span>
           </button>
         </div>
-        <Link to={`/quotes/${quote.id}`}>
+        <Link to={`/quote/${quote.id}`}>
           <button className="text-primary hover:text-primary-dark text-sm font-medium !rounded-button whitespace-nowrap">
             Voir détails
           </button>

@@ -19,7 +19,7 @@ body {
 }
 
 .hero-section {
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7)), url('https://readdy.ai/api/search-image?query=A%20beautiful%20abstract%20background%20with%20soft%20gradient%20colors%20in%20blue%20and%20purple%2C%20creating%20a%20serene%20and%20inspiring%20atmosphere.%20The%20left%20side%20has%20a%20smooth%20transition%20to%20white%2C%20perfect%20for%20text%20overlay.%20The%20right%20side%20has%20subtle%20artistic%20elements%20that%20evoke%20thoughtfulness%20and%20creativity&width=1200&height=600&seq=1&orientation=landscape');
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 255), rgba(255, 255, 255, 0)), url('.///assets/image_2.jpg');
     background-size: cover;
     background-position: center;
 }

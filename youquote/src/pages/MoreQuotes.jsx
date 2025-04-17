@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import CardQoute from "./../../components/CardQuote";
+import CardQoute from "./../components/CardQuote";
 
-const ListPopulaire = () => {
+const MoreQuotes = () => {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,29 +9,30 @@ const ListPopulaire = () => {
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const response = await fetch("/api/citations/populaire", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            // 2. Ajoutez l'authentification si nécessaire
-            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-          },
-          credentials: "include",
-        });
+       
+        
+        const response = await fetch("/api/citations/random/10", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+            credentials: "include",
+          });
 
-        console.log("Réponse du serveur:", response);
-
+        console.log("MORE QUOTES :", response);
+        
         if (!response.ok) {
-          // 3. Essayez de récupérer le message d'erreur du serveur
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(
-            errorData.message ||
-              `Erreur ${response.status}: ${response.statusText}`
-          );
+            // 3. Essayez de récupérer le message d'erreur du serveur
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(
+                errorData.message || 
+                `Erreur ${response.status}: ${response.statusText}`
+            );
         }
-
+        
         const data = await response.json();
+        console.log("MORE QUOTES :", data);
         // 4. Adaptez selon la structure de votre réponse API
         setQuotes(data.data || data);
       } catch (err) {
@@ -58,7 +58,7 @@ const ListPopulaire = () => {
     return (
       <div className="text-center py-10 text-red-500">
         <p>Erreur: {error}</p>
-        <button
+        <button 
           onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-primary text-white rounded"
         >
@@ -88,19 +88,9 @@ const ListPopulaire = () => {
             <CardQoute key={quote.id} quote={quote} />
           ))}
         </div>
-
-        {quotes.length > 0 && (
-          <div className="mt-10 text-center">
-            <Link to="/quotes/more">
-              <button className="px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors !rounded-button whitespace-nowrap">
-                Voir plus de citations
-              </button>
-            </Link>
-          </div>
-        )}
       </div>
     </section>
   );
 };
 
-export default ListPopulaire;
+export default MoreQuotes;
