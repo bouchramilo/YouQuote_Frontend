@@ -69,7 +69,10 @@ const Quote = () => {
   return (
     <div className="max-w-3xl mx-auto">
       {/* <!-- Quote Card --> */}
-      <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+      <div
+        className="bg-accent/10 rounded-lg p-8 mb-8 shadow-lg shadow-gray-400 transition-shadow hover:shadow-lg hover:shadow-accent "
+      
+      >
         <div className="flex justify-between items-start mb-6">
           <div>
             <h2 className="text-xl font-bold mb-2">Par {quote.user}</h2>
@@ -132,7 +135,7 @@ const Quote = () => {
             </button>
           </div>
           <div className="text-sm text-gray-500">
-            <span>Vues: { quote.popularite }</span>
+            <span>Vues: {quote.popularite}</span>
           </div>
         </div>
       </div>

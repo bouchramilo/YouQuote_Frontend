@@ -65,7 +65,7 @@ const Register = () => {
         return;
       }
 
-      // localStorage.setItem("auth_token", data.token);
+      localStorage.setItem("token", data.token);
       navigate("/dashboard");
     } catch (error) {
       setErrors({

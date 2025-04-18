@@ -20,7 +20,10 @@ const SideBar = () => {
           Gérer les tags
         </Link>
         <Link to="/quotes" className="block py-2 px-4 hover:bg-secondary">
-          Gérer les citations
+          Les citations validées
+        </Link>
+        <Link to="/quotes/valider" className="block py-2 px-4 hover:bg-secondary">
+          Les citations non validées
         </Link>
         <Link to="/users" className="block py-2 px-4 hover:bg-secondary">
           Utilisateurs

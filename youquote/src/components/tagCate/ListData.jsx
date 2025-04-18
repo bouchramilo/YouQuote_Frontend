@@ -1,10 +1,13 @@
 import RowTable from "./RowTable";
+import UpdateData from "./UpdateData";
 import { useState, useEffect } from "react";
 
 const ListData = ({ nameData }) => {
   const [donnee, setDonnee] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingItem, setEditingItem] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const fetchDonnee = async () => {
@@ -40,7 +43,28 @@ const ListData = ({ nameData }) => {
     };
 
     fetchDonnee();
-  }, []);
+  }, [refreshKey, nameData]);
+
+  const handleEditClick = (item) => {
+    setEditingItem(item);
+  };
+
+  const handleUpdateSuccess = (updatedItem) => {
+    setDonnee(
+      donnee.map((item) => (item._id === updatedItem._id ? updatedItem : item))
+    );
+    setEditingItem(null);
+    // Optionnel: recharger les données depuis le serveur
+    // setRefreshKey(prev => prev + 1);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingItem(null);
+  };
+
+  const handleDeleteSuccess = (deletedId) => {
+    setDonnee(donnee.filter((item) => item._id !== deletedId));
+  };
 
   if (loading) {
     return (
@@ -81,6 +105,18 @@ const ListData = ({ nameData }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      {/* Formulaire de modification */}
+      {editingItem && (
+        <div className="p-4 border-b">
+          <UpdateData
+            dataToUpdate={editingItem}
+            onUpdate={handleUpdateSuccess}
+            onCancel={handleCancelEdit}
+            nameData={nameData}
+          />
+        </div>
+      )}
+
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-primary text-white">
@@ -98,7 +134,14 @@ const ListData = ({ nameData }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {donnee.map((data, index) => (
-              <RowTable key={data.id || index} index={index + 1} data={data} />
+              <RowTable
+                key={data._id || index}
+                index={index + 1}
+                data={data}
+                onEdit={handleEditClick}
+                onDeleteSuccess={handleDeleteSuccess}
+                nameData={nameData}
+              />
             ))}
           </tbody>
         </table>
