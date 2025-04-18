@@ -21,7 +21,7 @@ const ListData = ({ nameData }) => {
           credentials: "include",
         });
 
-        console.log(`${nameData} response : `, response);
+        // // // console.log(`${nameData} response : `, response);
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));

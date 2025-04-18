@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import RowCorbeille from "./../../components/RowCorbeille";
 
+
 const SoftDelete = () => {
-  // ********************************************************************************************
-  const [quotes, setQuotes] = useState([]);
+  // *******************************************************************************************************************************************************************
+  const [quotes, setQuotes] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -28,7 +29,17 @@ const SoftDelete = () => {
         }
 
         const data = await response.json();
-        setQuotes(data.data || data);
+
+        const formattedQuotes = data.map((item) => ({
+          id: item.citation.id,
+          content: item.citation.content,
+          user: item.citation.user,
+          popularity: item.citation.popularite,
+          deleted_at: item.citation.deleted_at,
+        }));
+
+        setQuotes(formattedQuotes);
+        // // console.log("Formatted quotes:", formattedQuotes);
       } catch (err) {
         console.error("Erreur de fetch:", err);
         setError(err.message);
@@ -39,7 +50,7 @@ const SoftDelete = () => {
 
     fetchQuotes();
   }, []);
-
+  // *******************************************************************************************************************************************************************
   // Loading ......
   if (loading) {
     return (
@@ -71,7 +82,7 @@ const SoftDelete = () => {
       </div>
     );
   }
-  // ********************************************************************************************
+  // *******************************************************************************************************************************************************************
   return (
     <>
       <button
@@ -100,17 +111,17 @@ const SoftDelete = () => {
           <table className="min-w-full">
             <thead className="bg-secondary">
               <tr>
-                <th className="px-6 py-3 text-left text-sm font-bold">
+                <th className="px-6 py-3 text-left text-sm font-bold w-6/12">
                   Contenu
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-bold">
+                <th className="px-6 py-3 text-left text-sm font-bold w-2/12">
                   Auteur
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-bold">
+                {/* <th className="px-6 py-3 text-left text-sm font-bold w-2/12">
                   Supprimée par
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-bold">Date</th>
-                <th className="px-6 py-3 text-left text-sm font-bold">
+                </th> */}
+                <th className="px-6 py-3 text-left text-sm font-bold w-2/12">Date</th>
+                <th className="px-6 py-3 text-left text-sm font-bold w-2/12">
                   Actions
                 </th>
               </tr>

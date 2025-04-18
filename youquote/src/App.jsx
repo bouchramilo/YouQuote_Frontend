@@ -2,6 +2,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LayoutMain from "./components/partials/LayoutMain";
 import LayoutDashboard from "./components/partials/LayoutDashboard";
+import LayoutAuteur from "./components/partials/LayoutAuteur";
+//
 import UserContext from "./context/UserContext";
 import Home from "./pages/Home";
 import Login from "./pages/Auth/Login";
@@ -19,6 +21,7 @@ import Favories from "./pages/Admin/Favories";
 import Likes from "./pages/Admin/Likes";
 import Users from "./pages/Admin/Users";
 import Tags from "./pages/Admin/Tags";
+import Error404 from "./components/Error404";
 
 export default function App() {
   return (
@@ -28,14 +31,14 @@ export default function App() {
           {/* Layout principal : Header + Footer */}
           <Route element={<LayoutMain />}>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/quote/:id" element={<Quote />} />
-            <Route path="/quotes/more" element={<MoreQuotes />} />
-            <Route path="/quotes/add" element={<AddQuote />} />
+            <Route path="/login" element={<Login />} />
+            <Route element={<LayoutAuteur />}>
+              <Route path="/quote/:id" element={<Quote />} />
+              <Route path="/quotes/more" element={<MoreQuotes />} />
+              <Route path="/quotes/add" element={<AddQuote />} />
+            </Route>
           </Route>
-
-          {/* Layout dashboard : Sidebar uniquement */}
           <Route element={<LayoutDashboard />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/categories" element={<Categories />} />
@@ -47,7 +50,9 @@ export default function App() {
             <Route path="/likes" element={<Likes />} />
             <Route path="/favories" element={<Favories />} />
           </Route>
+          <Route path="*" element={<Error404 backTo={"/"} />} />{" "}
         </Routes>
+        {/* Layout dashboard : Sidebar uniquement */}
       </UserContext>
     </BrowserRouter>
   );

@@ -11,7 +11,7 @@ const AddData = ({ onCategoryAdded, nameData }) => {
     setIsSubmitting(true);
     setErrors({});
 
-    console.log("form data categorie : ", formData);
+    // // console.log("form data categorie : ", formData);
 
     try {
       const response = await fetch(`/api/${nameData}`, {
@@ -24,11 +24,11 @@ const AddData = ({ onCategoryAdded, nameData }) => {
         body: JSON.stringify(formData),
       });
 
-      console.log("response add categorie : ", response);
+      // // console.log("response add categorie : ", response);
 
       const data = await response.json();
 
-      console.log("data add categorie : ", data);
+      // // console.log("data add categorie : ", data);
 
       if (!response.ok) {
         if (data.errors) {
@@ -42,7 +42,7 @@ const AddData = ({ onCategoryAdded, nameData }) => {
       setFormData({ name: "" });
       if (onCategoryAdded) onCategoryAdded(data.data);
       window.location.reload();
-      console.log("Catégorie ajoutée avec succès");
+      // // console.log("Catégorie ajoutée avec succès");
     } catch (error) {
       console.error("Erreur:", error);
     } finally {

@@ -5,13 +5,13 @@ import { Context } from "./../context/UserContext";
 const CardQuoteNotValid = ({ quote, onValidation, onDelete }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
-  const { userId, user } = useContext(Context);
+  const { userId, user, role } = useContext(Context);
 
   const navigate = useNavigate();
   const userAuth = {
     user: user,
     user_id: userId,
-    role: user.roles[0].name,
+    role: role,
   };
   const handleValidate = async (e) => {
     e.preventDefault();
@@ -44,19 +44,23 @@ const CardQuoteNotValid = ({ quote, onValidation, onDelete }) => {
   };
 
   const handleDelete = async () => {
-    console.log("user connecter :::  ", user.roles[0].name);
+    // console.log("user connecter :::  ", user.roles[0].name);
 
     try {
       const response = await fetch(`/api/quotes/${quote.id}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
+          "Content-Type": "application/json",
           Accept: "application/json",
         },
         body: JSON.stringify(userAuth),
       });
       // const data = await response.json();
       // console.log("le user depuis le backent : " , data);
+
+      console.log("le role du user qui veux supprimer : ", userAuth.role, " et id ", userAuth.user_id);
+      
 
       if (!response.ok) {
         const errorData = await response.json();
