@@ -8,7 +8,7 @@ export default function LayoutMain() {
     <div>
       <Header />
 
-      <main className="p-4 bg-background min-h-screen flex items-center justify-center font-zen">
+      <main className=" bg-background min-h-screen flex items-center justify-center font-zen">
         <Outlet />
       </main>
 

@@ -161,20 +161,20 @@ const Hero = () => {
                   className="flex items-center space-x-1 text-gray-600 hover:text-red-500 transition-colors !rounded-button"
                 >
                   <span className="w-8 h-8 flex items-center justify-center">
-                    <i className="ri-heart-line"></i>
+                    <i className="ri-heart-fill text-red-600"></i>
                   </span>
-                  <span className="text-sm whitespace-nowrap">{likeCount}</span>
+                  <span className="text-sm whitespace-nowrap">  { quote.likes_count }</span>
                 </button>
 
                 <button 
                 //   onClick={handleFavorite}
                   className="flex items-center space-x-1 text-gray-600 hover:text-yellow-500 transition-colors !rounded-button"
                 >
-                  <span className="w-8 h-8 flex items-center justify-center">
-                    <i className={isFavorite ? "ri-star-fill" : "ri-star-line"}></i>
+                  <span className="w-8 h-8 flex items-center justify-center ">
+                    <i className="ri-star-fill text-yellow-600"></i>
                   </span>
                   <span className="text-sm whitespace-nowrap">
-                    {isFavorite ? "Favori" : "Favoris"}
+                    { quote.favorites_count }
                   </span>
                 </button>
               </div>

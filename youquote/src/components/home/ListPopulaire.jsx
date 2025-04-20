@@ -15,7 +15,6 @@ const ListPopulaire = () => {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            // 2. Ajoutez l'authentification si nécessaire
             Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
           },
           credentials: "include",
@@ -24,7 +23,6 @@ const ListPopulaire = () => {
         console.log("Réponse du serveur:", response);
 
         if (!response.ok) {
-          // 3. Essayez de récupérer le message d'erreur du serveur
           const errorData = await response.json().catch(() => ({}));
           throw new Error(
             errorData.message ||
@@ -33,7 +31,7 @@ const ListPopulaire = () => {
         }
 
         const data = await response.json();
-        // 4. Adaptez selon la structure de votre réponse API
+        console.log("liste de spopu : ", data);
         setQuotes(data.data || data);
       } catch (err) {
         console.error("Erreur de fetch:", err);

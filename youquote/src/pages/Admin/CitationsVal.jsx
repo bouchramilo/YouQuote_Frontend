@@ -29,7 +29,7 @@ const CitationsVal = () => {
         }
 
         const data = await response.json();
-        console.log("data :: :: :: ", data);
+        // console.log("data :: :: :: ", data);
         
         setQuotes(data.data || data);
       } catch (err) {
@@ -80,7 +80,7 @@ const CitationsVal = () => {
   // ***********************************************************************************************************************
   return (
     <div className="md:ml-64 p-8">
-      <h2 className="text-3xl font-zen mb-6">Gérer les Citations</h2>
+      <h2 className="text-3xl font-zen mb-6">Les Citations non validées</h2>
 
       <Filter />
 

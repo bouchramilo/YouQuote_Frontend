@@ -1,79 +1,118 @@
-import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Context } from "./../context/UserContext";
 import Select from "./../components/Select";
 import Label from "./../components/Label";
-import { Context } from "./../context/UserContext";
 
-const AddQuote = () => {
+const EditQuote = () => {
   // *************************************************************************************************************************************
-  // États du formulaire
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { userId, role } = useContext(Context);
+
+  const [citation, setCitation] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [content, setContent] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Context et navigation
-  const navigate = useNavigate();
-  const { userId } = useContext(Context);
+  //   *************************************************************************************************************************************
+  // récupérer la citation à modifier
+  useEffect(() => {
+    const fetchQuote = async () => {
+      try {
+        const response = await fetch(`/api/quotes/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          credentials: "include",
+        });
 
+        if (!response.ok) {
+          throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const quoteData = data.data || data;
+
+        setCitation(quoteData);
+        setContent(quoteData.content);
+        setSelectedCategories(quoteData.categories?.map((c) => c.id) || []);
+        setSelectedTags(quoteData.tags?.map((t) => t.id) || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuote();
+  }, [id]);
+
+  //   *************************************************************************************************************************************
+  // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrors({});
 
     try {
-      // Validation rapide côté client
       if (!content.trim()) {
         setErrors({ content: "Le contenu de la citation est requis" });
         return;
       }
 
-      const newQuote = {
-        content: content.trim(),
-        categories: selectedCategories,
-        tags: selectedTags,
-        user_id: userId,
-      };
-
-      const response = await fetch(`/api/quotes`, {
-        method: "POST",
+      const response = await fetch(`/api/quotes/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(newQuote),
+        body: JSON.stringify({
+          content: content.trim(),
+          categories: selectedCategories,
+          tags: selectedTags,
+          user_id: userId,
+          role: role,
+        }),
       });
-
-      const data = await response.json();
 
       if (!response.ok) {
-        setErrors(data.errors || {});
-        throw new Error(
-          data.message || "Erreur lors de l'ajout de la citation"
-        );
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erreur lors de la modification");
       }
 
-      navigate("/", {
-        state: { successMessage: "Citation ajoutée avec succès!" },
+      navigate(-1, {
+        state: { successMessage: "Citation modifiée avec succès!" },
       });
     } catch (error) {
-      console.error("Erreur:", error);
-      if (!errors.general) {
-        setErrors((prev) => ({ ...prev, general: error.message }));
-      }
+      setErrors((prev) => ({ ...prev, general: error.message }));
     } finally {
       setIsSubmitting(false);
     }
   };
-  // *************************************************************************************************************************************
+  //   *************************************************************************************************************************************
   const Annuler = (e) => {
     e.preventDefault();
     navigate(-1);
   }
 
-  // *************************************************************************************************************************************
+
+  //   *************************************************************************************************************************************
+  //   *************************************************************************************************************************************
+  if (loading) return <div className="text-center p-6">Chargement...</div>;
+  if (error) return <div className="text-center p-6 text-red-500">{error}</div>;
+  if (!citation)
+    return <div className="text-center p-6">Citation introuvable</div>;
+
+  //   *************************************************************************************************************************************
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Ajouter une citation</h1>
+    <div className="my-6 mx-auto bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl">
+      <h1 className="text-2xl font-bold mb-6">Modifier la citation</h1>
 
       {errors.general && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
@@ -82,7 +121,6 @@ const AddQuote = () => {
       )}
 
       <form onSubmit={handleSubmit}>
-        {/* Champ Citation */}
         <div className="mb-6">
           <Label htmlFor="content" labelname="Citation" required />
           <textarea
@@ -105,7 +143,6 @@ const AddQuote = () => {
           )}
         </div>
 
-        {/* Champ Catégories */}
         <div className="mb-6">
           <Label htmlFor="categories" labelname="Catégories" />
           <Select
@@ -122,7 +159,6 @@ const AddQuote = () => {
           )}
         </div>
 
-        {/* Champ Tags */}
         <div className="mb-8">
           <Label htmlFor="tags" labelname="Tags" />
           <Select
@@ -139,7 +175,6 @@ const AddQuote = () => {
           )}
         </div>
 
-        {/* Actions */}
         <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
           <button
             onClick={Annuler}
@@ -154,33 +189,7 @@ const AddQuote = () => {
               isSubmitting ? "opacity-70 cursor-not-allowed" : ""
             }`}
           >
-            {isSubmitting ? (
-              <span className="flex items-center justify-center">
-                <svg
-                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Publication...
-              </span>
-            ) : (
-              "Publier"
-            )}
+            {isSubmitting ? "Enregistrement..." : "Enregistrer"}
           </button>
         </div>
       </form>
@@ -188,4 +197,4 @@ const AddQuote = () => {
   );
 };
 
-export default AddQuote;
+export default EditQuote;

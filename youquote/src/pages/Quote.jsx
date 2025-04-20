@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const Quote = () => {
-  const { id } = useParams(); // Récupère l'ID depuis l'URL
+  const { id } = useParams();
   const [quote, setQuote] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,17 +11,15 @@ const Quote = () => {
     const fetchQuote = async () => {
       try {
         const response = await fetch(`/api/quotes/${id}`, {
-          // Utilisation de l'ID dans l'URL
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            // Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
           },
           credentials: "include",
         });
 
-        console.log("test de response de details : ", response);
+        // console.log("test de response de details : ", response);
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
@@ -32,7 +30,7 @@ const Quote = () => {
         }
 
         const data = await response.json();
-        console.log("test de data  de details : ", data);
+        // console.log("test de data  de details : ", data);
         setQuote(data.data || data);
       } catch (err) {
         console.error("Erreur de fetch:", err);
@@ -43,7 +41,7 @@ const Quote = () => {
     };
 
     fetchQuote();
-  }, [id]); // Dépendance à l'ID pour recharger si l'URL change
+  }, [id]);
 
   if (loading) {
     return <div className="text-center py-10">Chargement en cours...</div>;
@@ -68,21 +66,13 @@ const Quote = () => {
   }
   return (
     <div className="max-w-3xl mx-auto">
-      {/* <!-- Quote Card --> */}
-      <div
-        className="bg-accent/10 rounded-lg p-8 mb-8 shadow-lg shadow-gray-400 transition-shadow hover:shadow-lg hover:shadow-accent "
-      
-      >
+      <div className="bg-accent/10 rounded-lg p-8 mb-8 shadow-lg shadow-gray-400 transition-shadow hover:shadow-lg hover:shadow-accent ">
         <div className="flex justify-between items-start mb-6">
           <div>
             <h2 className="text-xl font-bold mb-2">Par {quote.user}</h2>
             <span className="text-sm text-gray-500">
               Publié le {quote.created_at}
             </span>
-          </div>
-          <div className="flex space-x-2">
-            <button className="text-accent hover:text-primary">✏️</button>
-            <button className="text-red-600 hover:text-red-800">🗑️</button>
           </div>
         </div>
 
@@ -124,14 +114,14 @@ const Quote = () => {
               data-liked="false"
             >
               <span className="mr-2">❤️</span>
-              <span className="like-count">42</span>
+              <span className="like-count">{quote.likes_count}</span>
             </button>
             <button
               className="favorite-button flex items-center"
               data-favorited="false"
             >
               <span className="mr-2">⭐</span>
-              <span>Ajouter aux favoris</span>
+              <span>{quote.favorites_count}</span>
             </button>
           </div>
           <div className="text-sm text-gray-500">

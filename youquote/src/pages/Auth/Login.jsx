@@ -66,7 +66,7 @@ const Login = () => {
       }
       
       localStorage.setItem("token", data.token);
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       setErrors({
         general: error.message.includes("Le serveur a répondu avec")

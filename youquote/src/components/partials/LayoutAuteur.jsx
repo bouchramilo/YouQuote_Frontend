@@ -18,9 +18,9 @@ export default function LayoutAuteur() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen w-screen">
       {/* <SideBar /> */}
-      <main className="flex-1 p-6 bg-gray-100">
+      <main className="flex-1 p-6 bg-gray-100 w-full ">
         <Outlet />
       </main>
     </div>

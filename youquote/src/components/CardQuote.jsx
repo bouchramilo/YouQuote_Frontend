@@ -31,20 +31,21 @@ const CardQuote = ({ key, quote }) => {
       <div className="flex items-center justify-between">
         <div className="flex space-x-3">
           <button className="flex items-center space-x-1 text-gray-600 hover:text-red-500 transition-colors !rounded-button">
-            <span className="w-8 h-8 flex items-center justify-center">
+            <span className="w-8 h-8 flex items-center justify-center text-red-600">
               <i className="ri-heart-line"></i>
             </span>
-            <span className="text-sm">245</span>
+            <span className="text-sm">{quote.likes_count}</span>
           </button>
 
           <button className="flex items-center space-x-1 text-gray-600 hover:text-yellow-500 transition-colors !rounded-button">
-            <span className="w-8 h-8 flex items-center justify-center">
+            <span className="w-8 h-8 flex items-center justify-center text-yellow-600">
               <i className="ri-star-line"></i>
             </span>
+            <span className="text-sm">{quote.favorites_count}</span>
           </button>
         </div>
         <Link to={`/quote/${quote.id}`}>
-          <button className="text-primary hover:text-primary-dark text-sm font-medium !rounded-button whitespace-nowrap">
+          <button className="text-primary hover:text-accent hover:underline text-sm font-medium !rounded-button whitespace-nowrap">
             Voir détails
           </button>
         </Link>

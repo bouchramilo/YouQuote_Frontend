@@ -3,16 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { Context } from "./../context/UserContext";
 
 const CardQuoteNotValid = ({ quote, onValidation, onDelete }) => {
+  // ******************************************************************************************************************************
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
   const { userId, user, role } = useContext(Context);
-
   const navigate = useNavigate();
   const userAuth = {
     user: user,
     user_id: userId,
     role: role,
   };
+
+  // ******************************************************************************************************************************
   const handleValidate = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -43,6 +45,7 @@ const CardQuoteNotValid = ({ quote, onValidation, onDelete }) => {
     }
   };
 
+  // ******************************************************************************************************************************
   const handleDelete = async () => {
     // console.log("user connecter :::  ", user.roles[0].name);
 
@@ -59,8 +62,12 @@ const CardQuoteNotValid = ({ quote, onValidation, onDelete }) => {
       // const data = await response.json();
       // console.log("le user depuis le backent : " , data);
 
-      console.log("le role du user qui veux supprimer : ", userAuth.role, " et id ", userAuth.user_id);
-      
+      // console.log(
+      //   "le role du user qui veux supprimer : ",
+      //   userAuth.role,
+      //   " et id ",
+      //   userAuth.user_id
+      // );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -73,10 +80,12 @@ const CardQuoteNotValid = ({ quote, onValidation, onDelete }) => {
     }
   };
 
+  // ******************************************************************************************************************************
   const handleEdit = () => {
     navigate(`/quotes/edit/${quote.id}`);
   };
 
+  // ******************************************************************************************************************************
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex justify-between items-start mb-4">

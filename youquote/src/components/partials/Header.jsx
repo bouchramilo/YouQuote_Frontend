@@ -5,7 +5,7 @@ import { Context } from "./../../context/UserContext";
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useContext(Context);
+  const { isAuthenticated, logout, role } = useContext(Context);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -28,16 +28,25 @@ const Header = () => {
 
         {/* Nav Desktop */}
         <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/" className="font-medium text-gray-900 hover:text-primary transition-colors">
+          <Link
+            to="/"
+            className="font-medium text-gray-900 hover:text-primary transition-colors"
+          >
             Accueil
           </Link>
 
           {!isAuthenticated ? (
             <>
-              <Link to="/register" className="font-medium text-gray-600 hover:text-primary transition-colors">
+              <Link
+                to="/register"
+                className="font-medium text-gray-600 hover:text-primary transition-colors"
+              >
                 Inscription
               </Link>
-              <Link to="/login" className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors">
+              <Link
+                to="/login"
+                className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors"
+              >
                 <span className="w-5 h-5 flex items-center justify-center">
                   <i className="ri-user-line"></i>
                 </span>
@@ -46,9 +55,29 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link to="/dashboard" className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors">
-                Dashboard
-              </Link>
+              {role === "Admin" ? (
+                <Link
+                  to="/dashboard"
+                  className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/myquotes"
+                    className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors"
+                  >
+                    Mes citations
+                  </Link>
+                  <Link
+                    to="/myfavorites"
+                    className="flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors"
+                  >
+                    Mes favories
+                  </Link>
+                </>
+              )}
               <button
                 onClick={handleLogout}
                 className="py-2 font-medium text-gray-600 hover:text-primary transition-colors"
@@ -64,7 +93,9 @@ const Header = () => {
           className="md:hidden w-10 h-10 flex items-center justify-center text-gray-700"
           onClick={toggleMenu}
         >
-          <i className={`text-xl ${isOpen ? "ri-close-line" : "ri-menu-line"}`}></i>
+          <i
+            className={`text-xl ${isOpen ? "ri-close-line" : "ri-menu-line"}`}
+          ></i>
         </button>
       </div>
 
@@ -72,16 +103,28 @@ const Header = () => {
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 py-3">
           <div className="container mx-auto px-4 flex flex-col space-y-3">
-            <Link to="/" className="py-2 font-medium text-gray-900 hover:text-primary transition-colors" onClick={toggleMenu}>
+            <Link
+              to="/"
+              className="py-2 font-medium text-gray-900 hover:text-primary transition-colors"
+              onClick={toggleMenu}
+            >
               Accueil
             </Link>
-            
+
             {!isAuthenticated ? (
               <>
-                <Link to="/register" className="py-2 font-medium text-gray-600 hover:text-primary transition-colors" onClick={toggleMenu}>
+                <Link
+                  to="/register"
+                  className="py-2 font-medium text-gray-600 hover:text-primary transition-colors"
+                  onClick={toggleMenu}
+                >
                   Inscription
                 </Link>
-                <Link to="/login" className="py-2 flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors" onClick={toggleMenu}>
+                <Link
+                  to="/login"
+                  className="py-2 flex items-center space-x-2 font-medium text-gray-600 hover:text-primary transition-colors"
+                  onClick={toggleMenu}
+                >
                   <span className="w-5 h-5 flex items-center justify-center">
                     <i className="ri-user-line"></i>
                   </span>
@@ -90,7 +133,11 @@ const Header = () => {
               </>
             ) : (
               <>
-                <Link to="/dashboard" className="py-2 font-medium text-gray-600 hover:text-primary transition-colors" onClick={toggleMenu}>
+                <Link
+                  to="/dashboard"
+                  className="py-2 font-medium text-gray-600 hover:text-primary transition-colors"
+                  onClick={toggleMenu}
+                >
                   Dashboard
                 </Link>
                 <button
