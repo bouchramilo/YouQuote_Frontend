@@ -41,7 +41,7 @@ const Likes = () => {
     };
 
     fetchLikes();
-  }, [id]); // Ajout de id comme dépendance
+  }, [id]); 
 
   if (loading) {
     return (

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const CardQuote = ({ key, quote }) => {
-  const categories = quote.categories || []; // Ajout d'une valeur par défaut
+  const categories = quote.categories || []; 
 
   return (
     <div

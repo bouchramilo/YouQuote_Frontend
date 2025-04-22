@@ -31,7 +31,7 @@ const MyQuotes = () => {
         const data = await response.json();
         console.log("myQuote : ",data);
         
-        setQuotes(data.data); // Mettre à jour l'état avec les données reçues
+        setQuotes(data.data); 
       } catch (error) {
         console.error("Error:", error);
         setError(error.message);

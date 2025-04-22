@@ -23,7 +23,6 @@ const MoreQuotes = () => {
         console.log("MORE QUOTES :", response);
         
         if (!response.ok) {
-            // 3. Essayez de récupérer le message d'erreur du serveur
             const errorData = await response.json().catch(() => ({}));
             throw new Error(
                 errorData.message || 
@@ -32,8 +31,7 @@ const MoreQuotes = () => {
         }
         
         const data = await response.json();
-        console.log("MORE QUOTES :", data);
-        // 4. Adaptez selon la structure de votre réponse API
+        // console.log("MORE QUOTES :", data);
         setQuotes(data.data || data);
       } catch (err) {
         console.error("Erreur de fetch:", err);

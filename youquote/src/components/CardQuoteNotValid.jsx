@@ -59,15 +59,7 @@ const CardQuoteNotValid = ({ quote, onValidation, onDelete }) => {
         },
         body: JSON.stringify(userAuth),
       });
-      // const data = await response.json();
-      // console.log("le user depuis le backent : " , data);
-
-      // console.log(
-      //   "le role du user qui veux supprimer : ",
-      //   userAuth.role,
-      //   " et id ",
-      //   userAuth.user_id
-      // );
+ 
 
       if (!response.ok) {
         const errorData = await response.json();

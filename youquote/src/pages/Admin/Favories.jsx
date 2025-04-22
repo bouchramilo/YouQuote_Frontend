@@ -41,7 +41,7 @@ const Favorites = () => {
     };
 
     fetchFavorites();
-  }, [id]); // Ajout de id comme dépendance
+  }, [id]); 
 
   if (loading) {
     return (

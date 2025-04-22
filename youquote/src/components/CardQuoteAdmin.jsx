@@ -8,32 +8,7 @@ const CardQuoteAdmin = ({ quote, onDelete, isLiked: initialIsLiked }) => {
   const { userId, user, role } = useContext(Context);
   const navigate = useNavigate();
 
-  // Fonction pour vérifier si l'utilisateur a liké
-  // const checkIfLiked = async () => {
-  //   try {
-  //     const response = await fetch(`/api/isliked/${quote.id}`, {
-  //       method: "GET",
-  //       credentials: "include",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //       },
-  //     });
 
-  //     if (!response.ok) {
-  //       throw new Error("Erreur lors de la vérification du like");
-  //     }
-
-  //     const data = await response.json();
-  //     setIsLiked(data.is_liked);
-  //   } catch (err) {
-  //     console.error("Erreur vérification like:", err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   checkIfLiked();
-  // }, [quote.id]);
 
   const handleDelete = async () => {
     try {
@@ -57,7 +32,7 @@ const CardQuoteAdmin = ({ quote, onDelete, isLiked: initialIsLiked }) => {
       }
 
       onDelete?.(quote.id);
-      // navigate(0); // À éviter - utilisez plutôt un callback parent
+      // navigate(0); 
     } catch (err) {
       setError(err.message);
     }
@@ -67,31 +42,6 @@ const CardQuoteAdmin = ({ quote, onDelete, isLiked: initialIsLiked }) => {
     navigate(`/quotes/edit/${quote.id}`);
   };
 
-  // const handleLike = async () => {
-  //   try {
-  //     const response = await fetch(`/api/likes/${quote.id}`, {
-  //       method: isLiked ? "DELETE" : "POST",
-  //       credentials: "include",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         user_id: userId,
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error("Erreur lors de la mise à jour du like");
-  //     }
-
-  //     setIsLiked(!isLiked);
-  //     // Mettre à jour le compteur de likes localement
-  //     // ou rafraîchir les données depuis le serveur
-  //   } catch (err) {
-  //     setError(err.message);
-  //   }
-  // };
 
   return (
     <div
@@ -101,7 +51,6 @@ const CardQuoteAdmin = ({ quote, onDelete, isLiked: initialIsLiked }) => {
           : "bg-white"
       }`}
     >
-      {/* ... (le reste de votre JSX reste inchangé jusqu'à la section des likes) */}
       <div className="flex justify-between items-start mb-4">
         <span className="text-sm text-gray-500">Par : {quote.user}</span>
         <div className="flex space-x-2">

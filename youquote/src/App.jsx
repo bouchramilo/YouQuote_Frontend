@@ -45,6 +45,7 @@ export default function App() {
               <Route path="/myfavorites" element={<MyFavorites />} />
             </Route>
           </Route>
+        {/* Layout dashboard : Sidebar uniquement */}
           <Route element={<LayoutDashboard />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/categories" element={<Categories />} />
@@ -58,7 +59,6 @@ export default function App() {
           </Route>
           <Route path="*" element={<Error404 backTo={"/"} />} />{" "}
         </Routes>
-        {/* Layout dashboard : Sidebar uniquement */}
       </UserContext>
     </BrowserRouter>
   );

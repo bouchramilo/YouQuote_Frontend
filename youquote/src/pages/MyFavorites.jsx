@@ -7,7 +7,7 @@ const MyFavorites = () => {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userId, role } = useContext(Context);
+  const { userId } = useContext(Context);
 
   useEffect(() => {
     async function fetchUserQuotes() {
@@ -31,7 +31,7 @@ const MyFavorites = () => {
         const data = await response.json();
         console.log("favories : ", data);
 
-        setQuotes(data.data); // Mettre à jour l'état avec les données reçues
+        setQuotes(data.data); 
       } catch (error) {
         console.error("Error:", error);
         setError(error.message);
