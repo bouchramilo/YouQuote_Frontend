@@ -38,7 +38,7 @@ Cette version se concentre sur les **fonctionnalités fondamentales**, la perfor
 - JWT Authentication *(optionnel)*  
 - Intervention Image *(génération d’images)*
 
-Lien GitHub (de partie 1 - Backend) : [https://github.com/bouchramilo/YouQuote-api-P2](https://github.com/bouchramilo/YouQuote-api)
+Lien GitHub (de partie 1 - Backend) : https://github.com/bouchramilo/YouQuote-api
 
 ---
 
